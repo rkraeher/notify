@@ -25,23 +25,13 @@ app.post("/api/notes", function (req, res) {
     res.json(db);
 });
 
-//!! NOT YET FUNCTIONAL
 app.delete("/api/notes/:id", function (req, res) { 
-    //Should receive a query parameter containing the id of a note to delete. 
-    //This means you'll need to find a way to give each note a unique id when it's saved. 
-    //In order to delete a note, you'll need to read all notes from the db.json file, 
-    //remove the note with the given id property, 
-    //and then rewrite the notes to the db.json file.
-
-    const { id } = req.body;
-    const newDb = db.filter(note => note.id != id);
-    fs.writeFile(db, newDb, 'utf8', function(err){
+    let id = req.params.id;
+    let newDb = JSON.stringify(db.filter(note => note.id !== id)); 
+    fs.writeFile("./db/db.json", newDb, 'utf8', function(err){
         if (err) throw err; 
     });
-    res.json(db); //unsure about this because asynchronicity
-    console.log(`The newDb is ${newDb}`);
-    console.log(`The db.json array looks like this: ${db}`);
-    console.log(`The id of the note you want to delete is ${id}`);
+    res.json(db);      
 });
 
 app.get("/notes", function (req, res) {
