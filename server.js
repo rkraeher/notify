@@ -22,6 +22,9 @@ app.post("/api/notes", function (req, res) {
     const { title, text } = req.body;
     const note = new Note(title, text);
     db.push(note);
+    fs.writeFile("./db/db.json", JSON.stringify(db), 'utf8', function(err){
+        if (err) throw err; 
+    });
     res.json(db);
 });
 
