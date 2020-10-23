@@ -28,14 +28,34 @@ app.post("/api/notes", function (req, res) {
     res.json(db);
 });
 
+
+
+
 app.delete("/api/notes/:id", function (req, res) { 
     let id = req.params.id;
-    let newDb = JSON.stringify(db.filter(note => note.id !== id)); 
-    fs.writeFile("./db/db.json", newDb, 'utf8', function(err){
-        if (err) throw err; 
-    });
-    res.json(db);      
+    let newDb = JSON.stringify(db.filter(note => note.id !== id));
+    async function refreshNotes(notesFile) {
+        try {
+            await fs.writeFile("./db/db.json", notesFile, 'utf8', function(err){
+                if (err) throw err; 
+            });
+        } catch (err) {
+            console.log(err);
+        } finally {
+            fs.readFile("./db/db.json", "utf8", function(err, data) {
+                if (err) throw err; 
+                res.json(data);
+            });
+        }
+    } 
+    refreshNotes(newDb);
+    // res.json(db);      
 });
+
+
+
+
+
 
 app.get("/notes", function (req, res) {
     res.sendFile(path.join(__dirname, "./public/notes.html"));
