@@ -25,11 +25,11 @@ app.post("/api/notes", function (req, res) {
     fs.writeFile("./db/db.json", JSON.stringify(db), 'utf8', function(err){
         if (err) throw err; 
     });
-    res.json(db);
+    fs.readFile("./db/db.json", "utf8", function(err, data) {
+        if (err) throw err;
+        res.json(db);
+    });
 });
-
-
-
 
 app.delete("/api/notes/:id", function (req, res) { 
     let id = req.params.id;
@@ -45,6 +45,8 @@ app.delete("/api/notes/:id", function (req, res) {
             fs.readFile("./db/db.json", "utf8", function(err, data) {
                 if (err) throw err; 
                 res.json(data);
+                location.reload();
+                // res.sendFile(path.join(__dirname, "./public/notes.html"));
             });
         }
     } 
