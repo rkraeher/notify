@@ -19,44 +19,47 @@ app.get("/api/notes", function (req, res) {
 });
 
 app.post("/api/notes", function (req, res) {
-    const { title, text } = req.body;
-    const note = new Note(title, text);
-    db.push(note);
-    fs.writeFile("./db/db.json", JSON.stringify(db), 'utf8', function(err){
-        if (err) throw err; 
-    });
-    fs.readFile("./db/db.json", "utf8", function(err, data) {
-        if (err) throw err;
-        res.json(db);
-    });
-});
-
-app.delete("/api/notes/:id", function (req, res) { 
-    let id = req.params.id;
-    let newDb = JSON.stringify(db.filter(note => note.id !== id));
-    async function refreshNotes(notesFile) {
+    async function postNote(req) {
+        const { title, text } = req.body;
+        const note = new Note(title, text);
         try {
-            await fs.writeFile("./db/db.json", notesFile, 'utf8', function(err){
+            await db.push(note);
+            await fs.writeFile("./db/db.json", JSON.stringify(db), 'utf8', function(err){
                 if (err) throw err; 
             });
         } catch (err) {
             console.log(err);
         } finally {
             fs.readFile("./db/db.json", "utf8", function(err, data) {
-                if (err) throw err; 
+                if (err) throw err;
                 res.json(data);
-                location.reload();
-                // res.sendFile(path.join(__dirname, "./public/notes.html"));
             });
         }
     } 
-    refreshNotes(newDb);
-    // res.json(db);      
+    postNote(req); 
 });
 
-
-
-
+app.delete("/api/notes/:id", function (req, res) { 
+    // let id = req.params.id;
+    // let newDb = JSON.stringify(db.filter(note => note.id !== id));
+    async function deleteNote() {
+        let id = req.params.id;
+        let newDb = JSON.stringify(db.filter(note => note.id !== id));
+        try {
+            await fs.writeFile("./db/db.json", newDb, 'utf8', function(err){
+                if (err) throw err; 
+            });
+         } catch (err) {
+                console.log(err);
+            } finally {
+        fs.readFile("./db/db.json", "utf8", function(err, data) {
+                        if (err) throw err;
+                        res.json(data);
+            });
+        }
+    }
+    deleteNote(req);  
+    });
 
 
 app.get("/notes", function (req, res) {
