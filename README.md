@@ -23,8 +23,8 @@ You can use the app by visiting at the following url: https://secret-plains-7627
 Node.js, Express.js (4.16.4), uniqid (5.2.0), nodemon (2.0.6), Bootstrap, CSS, HTML.
 
 ## Demo
-![Screenshot of deployed app](assets/home-image.png)
-![Screenshot of deployed app](assets/notes-image.png)      
+![Screenshot of deployed app](documentation/assets/home-image.png)
+![Screenshot of deployed app](documentation/assets/notes-image.png)      
 
 ## License 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  
